@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ejemplo de Card con Bootstrap</title>
     <!-- CDN de Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card-container {
@@ -14,71 +15,83 @@
             height: 100vh;
         }
         body {
-            background-color: #f5f5dc; /* Color crema */
+            background-color: #000; /* Color crema */
+        }
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            animation: pop 1s forwards;
+        }
+        @keyframes pop {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="card-container">
-    <div class="card" style="width: 19rem;">
+    <div class="card border-white" style="width: 19rem;">
         <img src="JJ.jpeg" class="card-img-top" alt="Imagen de ejemplo">
         <div class="card-body">
-            <h5 class="card-title text-center">Tiempo con mi amada mujer</h5>
-            <div class="card-text resultado text-center" id="resultado"></div>
-            <div class="card-text resultado2 text-center" id="resultado2"></div>
-            <div class="card-text resultado3 text-center" id="resultado3"></div>
-            <div class="card-text resultado4 text-center" id="resultado4"></div>
+            <h5 class="card-title text-center">Juntos con mi amada esposa el amor de mi vida❤️</h5>
+            <div class="card-text contador text-center" id="contador"></div>
         </div>
     </div>
 </div>
+<div id="hearts-container"></div>
+
 
 <!-- CDN de Bootstrap JS y dependencias (opcional) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    // Fecha de inicio de la relación (ajusta la fecha según sea necesario)
-    const fechaInicio = new Date('2024-04-12'); // Reemplaza con la fecha real
+    const fechaInicio = new Date('2024-04-12T00:00:00'); // Cambia esta fecha a la que desees
 
-    // Función para calcular el tiempo transcurrido
-    function tiempoConEsposa(fechaInicio) {
+    function actualizarContador() {
         const ahora = new Date();
         const diferencia = ahora - fechaInicio;
 
-        const segundos = Math.floor(diferencia / 1000);
-        const minutos = Math.floor(segundos / 60);
-        const horas = Math.floor(minutos / 60);
-        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-        
-        const años = Math.floor(dias / 365);
-        const meses = Math.floor((dias % 365) / 30);
-        const diasRestantes = dias % 30;
+        const segundos = Math.floor((diferencia / 1000) % 60);
+        const minutos = Math.floor((diferencia / 1000 / 60) % 60);
+        const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24)) % 30; // Días del mes actual
+        const meses = Math.floor(diferencia / (1000 * 60 * 60 * 24 * 30)); // Aproximación a meses
 
-        return {
-            años,
-            meses,
-            diasRestantes,
-            horas,
-            minutos,
-            segundos,
-        };
+        document.getElementById('contador').textContent =
+            `${meses} meses, ${dias} días, ${horas} horas, ${minutos} minutos y ${segundos} segundos`;
     }
 
-    // Obtener el tiempo transcurrido
-    const tiempo = tiempoConEsposa(fechaInicio);
+    setInterval(actualizarContador, 1000);
+    actualizarContador(); // Llama una vez para inicializar
 
-    // Mostrar el resultado en el HTML
-    const resultadoDiv = document.getElementById('resultado');
-    const resultadoDiv2 = document.getElementById('resultado2');
-    const resultadoDiv3 = document.getElementById('resultado3');
-    const resultadoDiv4 = document.getElementById('resultado4');
+    function createHeart() {
+            const heart = document.createElement('span');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️'; // Corazón
+            heart.style.left = Math.random() * 100 + 'vw'; // Posición horizontal aleatoria
+            heart.style.bottom = '0'; // Comienza desde la parte inferior
 
-    resultadoDiv.innerHTML = `${tiempo.meses} meses y ${tiempo.diasRestantes} días. <br>`;
-    resultadoDiv2.innerHTML = `Las mejores ${tiempo.horas} horas de mi vida. <br>`;
-    resultadoDiv3.innerHTML = `Los ${tiempo.minutos} minutos más felices de mi existencia. <br>`;
-    resultadoDiv4.innerHTML = `Los ${tiempo.segundos} segundos más maravillosos. <br>`;
+            document.body.appendChild(heart);
 
+            // Eliminar el corazón después de la animación
+            setTimeout(() => {
+                heart.remove();
+            }, 1000); // Duración de la animación
+        }
+
+        // Crear varios corazones al recargar la página
+        for (let i = 0; i < 18; i++) {
+            createHeart();
+        }
 </script>
 </body>
 </html>
